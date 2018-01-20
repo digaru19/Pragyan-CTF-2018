@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html dir="ltr" class="client-js" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>EVP Symmetric Encryption and Decryption - OpenSSLWiki</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"EVP_Symmetric_Encryption_and_Decryption","wgTitle":"EVP Symmetric Encryption and Decryption","wgCurRevisionId":2616,"wgRevisionId":2616,"wgArticleId":18,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Crypto API","C level","Examples"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"EVP_Symmetric_Encryption_and_Decryption","wgRelevantArticleId":18,"wgRequestId":"62252957e349b9c036223e3e","wgIsProbablyEditable":true,"wgRestrictionEdit":[],"wgRestrictionMove":[]});mw.loader.implement("user.options",function($,jQuery,require,module){mw.user.options.set({"variant":"en"});});mw.loader.implement("user.tokens",function ( $, jQuery, require, module ) {
+mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});/*@nomin*/;
+
+});mw.loader.load(["mediawiki.page.startup"]);});</script>
+<link rel="stylesheet" href="EVP%20Symmetric%20Encryption%20and%20Decryption%20-%20OpenSSLWiki_files/load.css">
+<!--[if IE 6]><link rel="stylesheet" href="/skins/MonoBook/IE60Fixes.css?303" media="screen"/><![endif]--><!--[if IE 7]><link rel="stylesheet" href="/skins/MonoBook/IE70Fixes.css?303" media="screen"/><![endif]-->
+<style>
+.mw-collapsible-toggle{float:right;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}  .mw-content-ltr .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr .mw-collapsible-toggle{float:right} .mw-content-rtl .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl .mw-collapsible-toggle{float:left}.mw-customtoggle,.mw-collapsible-toggle{cursor:pointer} caption .mw-collapsible-toggle,.mw-content-ltr caption .mw-collapsible-toggle,.mw-content-rtl caption .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr caption .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl caption .mw-collapsible-toggle{float:none} li .mw-collapsible-toggle,.mw-content-ltr li .mw-collapsible-toggle,.mw-content-rtl li .mw-collapsible-toggle,.mw-content-rtl .mw-content-ltr li .mw-collapsible-toggle,.mw-content-ltr .mw-content-rtl li .mw-collapsible-toggle{float:none} .mw-collapsible-toggle-li{list-style:none}
+.suggestions{overflow:hidden;position:absolute;top:0;left:0;width:0;border:none;z-index:1099;padding:0;margin:-1px 0 0 0}.suggestions-special{position:relative;background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0;margin-top:-2px;display:none;padding:0.25em 0.25em;line-height:1.25em}.suggestions-results{background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0}.suggestions-result{color:black;margin:0;line-height:1.5em;padding:0.01em 0.25em;text-align:left; overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}.suggestions-result-current{background-color:#4C59A6;color:white}.suggestions-special .special-label{color:gray;text-align:left}.suggestions-special .special-query{color:black;font-style:italic;text-align:left}.suggestions-special .special-hover{background-color:silver}.suggestions-result-current .special-label,.suggestions-result-current .special-query{color:white}.highlight{font-weight:bold}
+@media screen {
+	.tochidden,.toctoggle{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none}.toctoggle{font-size:94%}}
+@media print {
+	#toc.tochidden,.toctoggle{display:none}}
+.postedit-container{margin:0 auto;position:fixed;top:0;height:0;left:50%;z-index:1000;font-size:13px}.postedit-container:hover{cursor:pointer}.postedit{position:relative;top:0.6em;left:-50%;padding:.6em 3.6em .6em 1.1em;line-height:1.5625em;color:#626465;background-color:#f4f4f4;border:1px solid #dcd9d9;text-shadow:0 0.0625em 0 rgba(255,255,255,0.5);border-radius:5px;box-shadow:0 2px 5px 0 #ccc;-webkit-transition:all 0.25s ease-in-out;-moz-transition:all 0.25s ease-in-out;-ms-transition:all 0.25s ease-in-out;-o-transition:all 0.25s ease-in-out;transition:all 0.25s ease-in-out}.skin-monobook .postedit{top:6em !important}.postedit-faded{opacity:0}.postedit-icon{padding-left:41px;  line-height:25px;background-repeat:no-repeat;background-position:8px 50%}.postedit-icon-checkmark{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB9ElEQVR4AZWRA3AYURQArxrVHtW2bdu2bdu2zdi2bdu2bWxs7zeehZaw4f70kbs+zI3e/nWK+RWx3aOFlrL56Sy5SxrruG69hlv6OyK+mz+8KDSXdXembj0ispT7tjs4ZTIbpYBvxGSGKzZTeFrb7W/meN002swFs0U8ttpHTkF2BvCqWQrW35929bTsKm5Zb+SEwWwcY8wAngB9m7Z+d+rIPZ/npdy12M5p47n8dXsCYAf0qPy06eGMdktuDu9Qf+JmKl3SWM91qzVcN9tAbEYkwMaq0tyb1m/To5kP170el/BK8/qa6sJr70ydf+T/Uu5ab+Oo/lS0AkUBpIFWlZ9WPhxpse/PHO7YbOOczjL0vZV2lNxPPtG73dYXM+xvm2znrOl83tidoqCwMBgYXsPFB0on5S6pr+eK5TKuW67lgvaKvF8mL1dtfTL32FHxRdyx3cQpg7m4x9sCXKkTIzA4LDH44zWdzaUf71hv5rTG4uyzcusybxSX7aThbMQ8XgCYAp3rzTTQOiIh9PNlzY3FSuZxrzjme1Y7uGS6kjsWO4jPjM4FVjRZsvD4kO9XtTZzQn82NyzWc0B7AmZh6gA/hOYSGhfw9YbOVnarj+S7800AL2BIsxUAbWNToj7bhBuQmZcOsFdoKUC74rGheCwXmqAIQTc9jQcrADIAAAAASUVORK5CYII=);background-image:url(/resources/src/mediawiki.action/images/green-checkmark.png?d94f1)!ie;background-position:left}.postedit-close{position:absolute;padding:0 .8em;right:0;top:0;font-size:1.25em;font-weight:bold;line-height:2.3em;color:black;text-shadow:0 0.0625em 0 white;text-decoration:none;opacity:0.2;filter:alpha(opacity=20)}.postedit-close:hover{color:black;text-decoration:none;opacity:0.4;filter:alpha(opacity=40)}</style><style>
+.suggestions a.mw-searchSuggest-link,.suggestions a.mw-searchSuggest-link:hover,.suggestions a.mw-searchSuggest-link:active,.suggestions a.mw-searchSuggest-link:focus{color:black;text-decoration:none}.suggestions-result-current a.mw-searchSuggest-link,.suggestions-result-current a.mw-searchSuggest-link:hover,.suggestions-result-current a.mw-searchSuggest-link:active,.suggestions-result-current a.mw-searchSuggest-link:focus{color:white}.suggestions a.mw-searchSuggest-link .special-query{ overflow:hidden;-o-text-overflow:ellipsis; text-overflow:ellipsis;white-space:nowrap}</style><meta name="ResourceLoaderDynamicStyles" content="">
+<script async="" src="EVP%20Symmetric%20Encryption%20and%20Decryption%20-%20OpenSSLWiki_files/load_002.php"></script>
+<meta name="generator" content="MediaWiki 1.27.1">
+<link rel="alternate" type="application/x-wiki" title="Edit" href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit">
+<link rel="edit" title="Edit" href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit">
+<link rel="shortcut icon" href="https://wiki.openssl.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://wiki.openssl.org/opensearch_desc.php" title="OpenSSLWiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.openssl.org/api.php?action=rsd">
+<link rel="copyright" href="https://wiki.openssl.org/index.php/License">
+<link rel="alternate" type="application/atom+xml" title="OpenSSLWiki Atom feed" href="https://wiki.openssl.org/index.php?title=Special:RecentChanges&amp;feed=atom">
+<script src="EVP%20Symmetric%20Encryption%20and%20Decryption%20-%20OpenSSLWiki_files/load.php"></script></head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-EVP_Symmetric_Encryption_and_Decryption rootpage-EVP_Symmetric_Encryption_and_Decryption skin-monobook action-view">
+<div id="globalWrapper">
+		<div id="column-content">
+			<div id="content" class="mw-body" role="main">
+				<a id="top"></a>
+				
+				<div class="mw-indicators">
+</div>
+				<h1 id="firstHeading" class="firstHeading" lang="en">EVP Symmetric Encryption and Decryption</h1>
+				
+				<div id="bodyContent" class="mw-body-content">
+					<div id="siteSub">From OpenSSLWiki</div>
+					<div id="contentSub"></div>
+										<div id="jump-to-nav" class="mw-jump">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>
+
+					<!-- start content -->
+					<div id="mw-content-text" dir="ltr" class="mw-content-ltr" lang="en"><table class="wikitable" style="float: right; text-align: center;">
+<caption>Symmetric Encryption and Decryption
+</caption>
+<tbody><tr>
+<td><a rel="nofollow" class="external text" href="http://wiki.openssl.org/index.php/Manual:Evp(3)">Documentation</a>
+</td></tr>
+<tr>
+<td> <tt>#include &lt;openssl/evp.h&gt;</tt>
+</td></tr></tbody></table>
+<p>The <a href="https://wiki.openssl.org/index.php/Libcrypto_API" title="Libcrypto API">libcrypto</a>
+ library within OpenSSL provides functions for performing symmetric 
+encryption and decryption operations across a wide range of algorithms 
+and modes. This page walks you through the basics of performing a simple
+ encryption and corresponding decryption operation.
+</p><p>In order to perform encryption/decryption you need to know:
+</p>
+<ul><li> Your algorithm</li>
+<li> Your mode</li>
+<li> Your key</li>
+<li> Your Initialisation Vector (IV)</li></ul>
+<p>This page assumes that you know what all of these things mean. If you don't then please refer to <a href="https://wiki.openssl.org/index.php?title=Basics_of_Encryption&amp;action=edit&amp;redlink=1" class="new" title="Basics of Encryption (page does not exist)">Basics of Encryption</a>.
+</p>
+<div id="toc" class="toc"><div id="toctitle"><h2>Contents</h2><span class="toctoggle">&nbsp;[<a href="#" id="togglelink">hide</a>]&nbsp;</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Setting_it_up"><span class="tocnumber">1</span> <span class="toctext">Setting it up</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Encrypting_the_message"><span class="tocnumber">2</span> <span class="toctext">Encrypting the message</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Decrypting_the_Message"><span class="tocnumber">3</span> <span class="toctext">Decrypting the Message</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Ciphertext_Output"><span class="tocnumber">4</span> <span class="toctext">Ciphertext Output</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Padding"><span class="tocnumber">5</span> <span class="toctext">Padding</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#C.2B.2B_Programs"><span class="tocnumber">6</span> <span class="toctext">C++ Programs</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#Notes_on_some_unusual_modes"><span class="tocnumber">7</span> <span class="toctext">Notes on some unusual modes</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#See_also"><span class="tocnumber">8</span> <span class="toctext">See also</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Setting_it_up">Setting it up</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=1" title="Edit section: Setting it up">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>The code below sets up the program. In this example we are going to 
+take a simple message ("The quick brown fox jumps over the lazy dog"), 
+and then encrypt it using a predefined key and IV. In this example the 
+key and IV have been hard coded in - in a real situation you would never
+ do this! Following encryption we will then decrypt the resulting 
+ciphertext, and (hopefully!) end up with the message we first started 
+with. This program expects two functions to be defined: "encrypt" and 
+"decrypt". We will define those further down the page. Note that this 
+uses the auto-init facility in 1.1.0.
+</p><p><br>
+</p>
+<pre>#include &lt;openssl/conf.h&gt;
+#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/err.h&gt;
+#include &lt;string.h&gt;
+
+int main (void)
+{
+  /* Set up the key and iv. Do I need to say to not hard code these in a
+   * real application?&nbsp;:-)
+   */
+
+  /* A 256 bit key */
+  unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+
+  /* A 128 bit IV */
+  unsigned char *iv = (unsigned char *)"0123456789012345";
+
+  /* Message to be encrypted */
+  unsigned char *plaintext =
+                (unsigned char *)"The quick brown fox jumps over the lazy dog";
+
+  /* Buffer for ciphertext. Ensure the buffer is long enough for the
+   * ciphertext which may be longer than the plaintext, dependant on the
+   * algorithm and mode
+   */
+  unsigned char ciphertext[128];
+
+  /* Buffer for the decrypted text */
+  unsigned char decryptedtext[128];
+
+  int decryptedtext_len, ciphertext_len;
+</pre>
+<p><br> 
+</p>
+<pre>  /* Encrypt the plaintext */
+  ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
+                            ciphertext);
+
+  /* Do something useful with the ciphertext here */
+  printf("Ciphertext is:\n");
+  BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
+
+  /* Decrypt the ciphertext */
+  decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
+    decryptedtext);
+
+  /* Add a NULL terminator. We are expecting printable text */
+  decryptedtext[decryptedtext_len] = '\0';
+
+  /* Show the decrypted text */
+  printf("Decrypted text is:\n");
+  printf("%s\n", decryptedtext);
+
+
+  return 0;
+}
+</pre>
+<p>The program sets up a 256 bit key and a 128 bit IV. This is 
+appropriate for the 256-bit AES encryption that we going to be doing in 
+CBC mode. Make sure you use the right key and IV length for the cipher 
+you have selected, or it will go horribly wrong!! The IV should be 
+random for CBC mode.
+</p><p>We've also set up a buffer for the ciphertext to be placed in. It
+ is important to ensure that this buffer is sufficiently large for the 
+expected ciphertext or you may see a program crash (or potentially 
+introduce a security vulnerability into your code). Note: The ciphertext
+ may be longer than the plaintext (e.g. if padding is being used).
+</p><p>We're also going to need a helper function to handle any errors. 
+This will simply dump any error messages from the OpenSSL error stack to
+ the screen, and then abort the program.
+</p>
+<pre>void handleErrors(void)
+{
+  ERR_print_errors_fp(stderr);
+  abort();
+}
+</pre>
+<h2><span class="mw-headline" id="Encrypting_the_message">Encrypting the message</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=2" title="Edit section: Encrypting the message">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>So now that we have set up the program we need to define the 
+"encrypt" function. This will take as parameters the plaintext, the 
+length of the plaintext, the key to be used, and the IV. We'll also take
+ in a buffer to put the ciphertext in (which we assume to be long 
+enough), and will return the length of the ciphertext that we have 
+written.
+</p><p>Encrypting consists of the following stages:
+</p>
+<ul><li> Setting up a context</li>
+<li> Initialising the encryption operation</li>
+<li> Providing plaintext bytes to be encrypted</li>
+<li> Finalising the encryption operation</li></ul>
+<p>During initialisation we will provide an EVP_CIPHER object. In this 
+case we are using EVP_aes_256_cbc(), which uses the AES algorithm with a
+ 256-bit key in <a href="https://wiki.openssl.org/index.php?title=CBC&amp;action=edit&amp;redlink=1" class="new" title="CBC (page does not exist)">CBC</a> mode. Refer to <a href="https://wiki.openssl.org/index.php/EVP#Working_with_Algorithms_and_Modes" title="EVP">EVP#Working with Algorithms and Modes</a> for further details.
+</p>
+<pre>int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
+  unsigned char *iv, unsigned char *ciphertext)
+{
+  EVP_CIPHER_CTX *ctx;
+
+  int len;
+
+  int ciphertext_len;
+
+  /* Create and initialise the context */
+  if(!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+
+  /* Initialise the encryption operation. IMPORTANT - ensure you use a key
+   * and IV size appropriate for your cipher
+   * In this example we are using 256 bit AES (i.e. a 256 bit key). The
+   * IV size for *most* modes is the same as the block size. For AES this
+   * is 128 bits */
+  if(1&nbsp;!= EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+    handleErrors();
+
+  /* Provide the message to be encrypted, and obtain the encrypted output.
+   * EVP_EncryptUpdate can be called multiple times if necessary
+   */
+  if(1&nbsp;!= EVP_EncryptUpdate(ctx, ciphertext, &amp;len, plaintext, plaintext_len))
+    handleErrors();
+  ciphertext_len = len;
+
+  /* Finalise the encryption. Further ciphertext bytes may be written at
+   * this stage.
+   */
+  if(1&nbsp;!= EVP_EncryptFinal_ex(ctx, ciphertext + len, &amp;len)) handleErrors();
+  ciphertext_len += len;
+
+  /* Clean up */
+  EVP_CIPHER_CTX_free(ctx);
+
+  return ciphertext_len;
+}
+</pre>
+<h2><span class="mw-headline" id="Decrypting_the_Message">Decrypting the Message</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=3" title="Edit section: Decrypting the Message">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>Finally we need to define the "decrypt" operation. This is very similar to encryption and consists of the following stages:
+Decrypting consists of the following stages:
+</p>
+<ul><li> Setting up a context</li>
+<li> Initialising the decryption operation</li>
+<li> Providing ciphertext bytes to be decrypted</li>
+<li> Finalising the decryption operation</li></ul>
+<p>Again through the parameters we will receive the ciphertext to be 
+decrypted, the length of the ciphertext, the key and the IV. We'll also 
+receive a buffer to place the decrypted text into, and return the length
+ of the plaintext we have found.
+</p><p>Note that we have passed the length of the ciphertext. This is 
+required as you cannot use functions such as "strlen" on this data - its
+ binary! Similarly, even though in this example our plaintext really is 
+ASCII text, OpenSSL does not know that. In spite of the name plaintext 
+could be binary data, and therefore no NULL terminator will be put on 
+the end (unless you encrypt the NULL as well of course).
+</p><p>Here is the decrypt function:
+</p>
+<pre>int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
+  unsigned char *iv, unsigned char *plaintext)
+{
+  EVP_CIPHER_CTX *ctx;
+
+  int len;
+
+  int plaintext_len;
+
+  /* Create and initialise the context */
+  if(!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+
+  /* Initialise the decryption operation. IMPORTANT - ensure you use a key
+   * and IV size appropriate for your cipher
+   * In this example we are using 256 bit AES (i.e. a 256 bit key). The
+   * IV size for *most* modes is the same as the block size. For AES this
+   * is 128 bits */
+  if(1&nbsp;!= EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+    handleErrors();
+
+  /* Provide the message to be decrypted, and obtain the plaintext output.
+   * EVP_DecryptUpdate can be called multiple times if necessary
+   */
+  if(1&nbsp;!= EVP_DecryptUpdate(ctx, plaintext, &amp;len, ciphertext, ciphertext_len))
+    handleErrors();
+  plaintext_len = len;
+
+  /* Finalise the decryption. Further plaintext bytes may be written at
+   * this stage.
+   */
+  if(1&nbsp;!= EVP_DecryptFinal_ex(ctx, plaintext + len, &amp;len)) handleErrors();
+  plaintext_len += len;
+
+  /* Clean up */
+  EVP_CIPHER_CTX_free(ctx);
+
+  return plaintext_len;
+}
+</pre>
+<h2><span class="mw-headline" id="Ciphertext_Output">Ciphertext Output</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=4" title="Edit section: Ciphertext Output">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>If all goes well you should end up with output that looks like the following:
+</p>
+<pre>Ciphertext is:
+0000 - e0 6f 63 a7 11 e8 b7 aa-9f 94 40 10 7d 46 80 a1   .oc.......@.}F..
+0010 - 17 99 43 80 ea 31 d2 a2-99 b9 53 02 d4 39 b9 70   ..C..1....S..9.p
+0020 - 2c 8e 65 a9 92 36 ec 92-07 04 91 5c f1 a9 8a 44   ,.e..6.....\...D
+Decrypted text is:
+The quick brown fox jumps over the lazy dog
+</pre>
+<p>For further details about symmetric encryption and decryption operations refer to the OpenSSL documentation <a href="https://wiki.openssl.org/index.php/Manual:EVP_EncryptInit(3)" title="Manual:EVP EncryptInit(3)">Manual:EVP_EncryptInit(3)</a>.
+</p>
+<h2><span class="mw-headline" id="Padding">Padding</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=5" title="Edit section: Padding">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>OpenSSL uses PKCS padding by default. If the mode you are using allows you to change the padding, then you can change it with <tt><a rel="nofollow" class="external text" href="http://www.openssl.org/docs/man1.0.2/crypto/EVP_CIPHER_CTX_set_padding.html">EVP_CIPHER_CTX_set_padding</a></tt>. From the man page:
+</p>
+<blockquote>EVP_CIPHER_CTX_set_padding() enables or disables padding. By
+ default encryption operations are padded using standard block padding 
+and the padding is checked and removed when decrypting. If the pad 
+parameter is zero then no padding is performed, the total amount of data
+ encrypted or decrypted must then be a multiple of the block size or an 
+error will occur...
+<p>PKCS padding works by adding n padding bytes of value n to make the 
+total length of the encrypted data a multiple of the block size. Padding
+ is always added so if the data is already a multiple of the block size n
+ will equal the block size. For example if the block size is 8 and 11 
+bytes are to be encrypted then 5 padding bytes of value 5 will be 
+added...
+</p>
+If padding is disabled then the decryption operation will only succeed 
+if the total amount of data decrypted is a multiple of the block size.</blockquote>
+<h2><span class="mw-headline" id="C.2B.2B_Programs">C++ Programs</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=6" title="Edit section: C++ Programs">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>Questions regarding how to use the EVP interfaces from a C++ program 
+arise on occasion. Generally speaking, using the EVP interfaces from a 
+C++ program is the same as using them from a C program.
+</p><p>You can download a sample program using EVP symmetric encryption and C++11 called <a href="https://wiki.openssl.org/images/5/5d/Evp-encrypt-cxx.tar.gz" class="internal" title="Evp-encrypt-cxx.tar.gz">evp-encrypt.cxx</a>. The sample uses a custom allocator to zeroize memory, C++ smart pointers to manage resources, and provides a <tt>secure_string</tt> using <tt>basic_string</tt> and the custom allocator. You need to use <tt>g++ -std=c++11 ...</tt> to compile it because of <tt>std::unique_ptr</tt>.
+</p><p>You should also ensure you configure an build with <tt>-fexception</tt> to ensure C++ exceptions pass as expected through C code. And you should avoid other flags, like <tt>-fno-exceptions</tt> and <tt>-fno-rtti</tt>. 
+</p><p>The program's <tt>main</tt> simply encrypts and decrypts a string using AES-256 in CBC mode:
+</p>
+<pre>typedef unsigned char byte;
+typedef std::basic_string&lt;char, std::char_traits&lt;char&gt;, zallocator&lt;char&gt; &gt; secure_string;
+using EVP_CIPHER_CTX_ptr = std::unique_ptr&lt;EVP_CIPHER_CTX, decltype(&amp;::EVP_CIPHER_CTX_free)&gt;;
+...
+
+int main(int argc, char* argv[])
+{
+    // Load the necessary cipher
+    EVP_add_cipher(EVP_aes_256_cbc());
+
+    // plaintext, ciphertext, recovered text
+    secure_string ptext = "Yoda said, Do or do not. There is no try.";
+    secure_string ctext, rtext;
+
+    byte key[KEY_SIZE], iv[BLOCK_SIZE];
+    gen_params(key, iv);
+  
+    aes_encrypt(key, iv, ptext, ctext);
+    aes_decrypt(key, iv, ctext, rtext);
+    
+    OPENSSL_cleanse(key, KEY_SIZE);
+    OPENSSL_cleanse(iv, BLOCK_SIZE);
+
+    std::cout &lt;&lt; "Original message:\n" &lt;&lt; ptext &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Recovered message:\n" &lt;&lt; rtext &lt;&lt; std::endl;
+
+    return 0;
+}</pre>
+<p>And the encryption routine is as follows. The decryption routine is similar:
+</p>
+<pre>void aes_encrypt(const byte key[KEY_SIZE], const byte iv[BLOCK_SIZE], const secure_string&amp; ptext, secure_string&amp; ctext)
+{
+    EVP_CIPHER_CTX_ptr ctx(EVP_CIPHER_CTX_new(),&nbsp;::EVP_CIPHER_CTX_free);
+    int rc = EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_cbc(), NULL, key, iv);
+    if (rc&nbsp;!= 1)
+      throw std::runtime_error("EVP_EncryptInit_ex failed");
+
+    // Cipher text expands upto BLOCK_SIZE
+    ctext.resize(ptext.size()+BLOCK_SIZE);
+    int out_len1 = (int)ctext.size();
+
+    rc = EVP_EncryptUpdate(ctx.get(), (byte*)&amp;ctext[0], &amp;out_len1, (const byte*)&amp;ptext[0], (int)ptext.size());
+    if (rc&nbsp;!= 1)
+      throw std::runtime_error("EVP_EncryptUpdate failed");
+  
+    int out_len2 = (int)ctext.size() - out_len1;
+    rc = EVP_EncryptFinal_ex(ctx.get(), (byte*)&amp;ctext[0]+out_len1, &amp;out_len2);
+    if (rc&nbsp;!= 1)
+      throw std::runtime_error("EVP_EncryptFinal_ex failed");
+
+    // Set cipher text size now that we know it
+    ctext.resize(out_len1 + out_len2);
+}</pre>
+<h2><span class="mw-headline" id="Notes_on_some_unusual_modes">Notes on some unusual modes</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=7" title="Edit section: Notes on some unusual modes">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<p>Worthy of mention here is the <a href="https://wiki.openssl.org/index.php?title=XTS&amp;action=edit&amp;redlink=1" class="new" title="XTS (page does not exist)">XTS</a>
+ mode (e.g. EVP_aes_256_xts()). This works in exactly the same way as 
+shown above, except that the "tweak" is provided in the IV parameter. A 
+further "gotcha" is that XTS mode expects a key which is twice as long 
+as normal. Therefore EVP_aes_256_xts() expects a key which is 512-bits 
+long.
+</p><p>Authenticated encryption modes (<a href="https://wiki.openssl.org/index.php/GCM" title="GCM" class="mw-redirect">GCM</a> or <a href="https://wiki.openssl.org/index.php/CCM" title="CCM" class="mw-redirect">CCM</a>) work in essentially the same way as shown above but require some special handling. See <a href="https://wiki.openssl.org/index.php/EVP_Authenticated_Encryption_and_Decryption" title="EVP Authenticated Encryption and Decryption">EVP Authenticated Encryption and Decryption</a> for further details.
+</p>
+<h2><span class="mw-headline" id="See_also">See also</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit&amp;section=8" title="Edit section: See also">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<ul><li> <a href="https://wiki.openssl.org/index.php/EVP" title="EVP">EVP</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/Libcrypto_API" title="Libcrypto API">Libcrypto API</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Authenticated_Encryption_and_Decryption" title="EVP Authenticated Encryption and Decryption">EVP Authenticated Encryption and Decryption</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Asymmetric_Encryption_and_Decryption_of_an_Envelope" title="EVP Asymmetric Encryption and Decryption of an Envelope">EVP Asymmetric Encryption and Decryption of an Envelope</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Signing_and_Verifying" title="EVP Signing and Verifying">EVP Signing and Verifying</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Message_Digests" title="EVP Message Digests">EVP Message Digests</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Key_Agreement" title="EVP Key Agreement">EVP Key Agreement</a></li>
+<li> <a href="https://wiki.openssl.org/index.php/EVP_Key_and_Parameter_Generation" title="EVP Key and Parameter Generation">EVP Key and Parameter Generation</a></li></ul>
+
+<!-- 
+NewPP limit report
+Cached time: 20180118072326
+Cache expiry: 86400
+Dynamic content: false
+CPU time usage: 0.016 seconds
+Real time usage: 0.020 seconds
+Preprocessor visited node count: 61/1000000
+Preprocessor generated node count: 136/1000000
+Post‐expand include size: 208/2097152 bytes
+Template argument size: 87/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+-->
+
+<!-- 
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    2.040      1 - Template:DocInclude
+100.00%    2.040      1 - -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:18-0!*!0!!en!*!* and timestamp 20180118072326 and revision id 2616
+ -->
+</div><div class="printfooter">
+Retrieved from "<a dir="ltr" href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;oldid=2616">https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;oldid=2616</a>"</div>
+					<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="https://wiki.openssl.org/index.php/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="https://wiki.openssl.org/index.php/Category:Crypto_API" title="Category:Crypto API">Crypto API</a></li><li><a href="https://wiki.openssl.org/index.php/Category:C_level" title="Category:C level">C level</a></li><li><a href="https://wiki.openssl.org/index.php/Category:Examples" title="Category:Examples">Examples</a></li></ul></div></div>					<!-- end content -->
+										<div class="visualClear"></div>
+				</div>
+			</div>
+		</div>
+		<div id="column-one">
+			<h2>Navigation menu</h2>
+					<div id="p-cactions" class="portlet" role="navigation">
+			<h3>Views</h3>
+
+			<div class="pBody">
+				<ul>
+				<li id="ca-nstab-main" class="selected"><a href="https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption" title="View the content page [Alt+Shift+c]" accesskey="c">Page</a></li>
+				<li id="ca-talk"><a href="https://wiki.openssl.org/index.php/Talk:EVP_Symmetric_Encryption_and_Decryption" rel="discussion" title="Discussion about the content page [Alt+Shift+t]" accesskey="t">Discussion</a></li>
+				<li id="ca-edit"><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=edit" title="Edit this page [Alt+Shift+e]" accesskey="e">Edit</a></li>
+				<li id="ca-history"><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=history" title="Past revisions of this page [Alt+Shift+h]" accesskey="h">History</a></li>
+				</ul>
+							</div>
+		</div>
+				<div class="portlet" id="p-personal" role="navigation">
+				<h3>Personal tools</h3>
+
+				<div class="pBody">
+					<ul>
+						<li id="pt-anonuserpage">Not logged in</li>							<li id="pt-anontalk"><a href="https://wiki.openssl.org/index.php/Special:MyTalk" title="Discussion about edits from this IP address [Alt+Shift+n]" accesskey="n">Talk</a></li>
+													<li id="pt-anoncontribs"><a href="https://wiki.openssl.org/index.php/Special:MyContributions" title="A list of edits made from this IP address [Alt+Shift+y]" accesskey="y">Contributions</a></li>
+													<li id="pt-login"><a href="https://wiki.openssl.org/index.php?title=Special:UserLogin&amp;returnto=EVP+Symmetric+Encryption+and+Decryption" title="You are encouraged to log in; however, it is not mandatory [Alt+Shift+o]" accesskey="o">Log in</a></li>
+											</ul>
+				</div>
+			</div>
+			<div class="portlet" id="p-logo" role="banner">
+				<a href="https://wiki.openssl.org/index.php/Main_Page" class="mw-wiki-logo" title="Visit the main page"></a>
+			</div>
+				<div class="generated-sidebar portlet" id="p-navigation" role="navigation">
+		<h3>Navigation</h3>
+		<div class="pBody">
+							<ul>
+											<li id="n-mainpage-description"><a href="https://wiki.openssl.org/index.php/Main_Page" title="Visit the main page [Alt+Shift+z]" accesskey="z">Main page</a></li>
+											<li id="n-recentchanges"><a href="https://wiki.openssl.org/index.php/Special:RecentChanges" title="A list of recent changes in the wiki [Alt+Shift+r]" accesskey="r">Recent changes</a></li>
+											<li id="n-randompage"><a href="https://wiki.openssl.org/index.php/Special:Random" title="Load a random page [Alt+Shift+x]" accesskey="x">Random page</a></li>
+											<li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li>
+									</ul>
+					</div>
+		</div>
+			<div id="p-search" class="portlet" role="search">
+			<h3><label for="searchInput">Search</label></h3>
+
+			<div id="searchBody" class="pBody">
+				<form action="/index.php" id="searchform">
+					<input name="title" value="Special:Search" type="hidden">
+					<input name="search" placeholder="Search" title="Search OpenSSLWiki [Alt+Shift+f]" accesskey="f" id="searchInput" autocomplete="off" type="search">
+					<input name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchGoButton" class="searchButton" type="submit">&nbsp;
+						<input name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton" type="submit">
+				</form>
+
+							</div>
+		</div>
+			<div class="portlet" id="p-tb" role="navigation">
+			<h3>Tools</h3>
+
+			<div class="pBody">
+				<ul>
+											<li id="t-whatlinkshere"><a href="https://wiki.openssl.org/index.php/Special:WhatLinksHere/EVP_Symmetric_Encryption_and_Decryption" title="A list of all wiki pages that link here [Alt+Shift+j]" accesskey="j">What links here</a></li>
+											<li id="t-recentchangeslinked"><a href="https://wiki.openssl.org/index.php/Special:RecentChangesLinked/EVP_Symmetric_Encryption_and_Decryption" title="Recent changes in pages linked from this page [Alt+Shift+k]" accesskey="k">Related changes</a></li>
+											<li id="t-specialpages"><a href="https://wiki.openssl.org/index.php/Special:SpecialPages" title="A list of all special pages [Alt+Shift+q]" accesskey="q">Special pages</a></li>
+											<li id="t-print"><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;printable=yes" rel="alternate" title="Printable version of this page [Alt+Shift+p]" accesskey="p">Printable version</a></li>
+											<li id="t-permalink"><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;oldid=2616" title="Permanent link to this revision of the page">Permanent link</a></li>
+											<li id="t-info"><a href="https://wiki.openssl.org/index.php?title=EVP_Symmetric_Encryption_and_Decryption&amp;action=info" title="More information about this page">Page information</a></li>
+									</ul>
+							</div>
+		</div>
+			</div><!-- end of the left (by default at least) column -->
+		<div class="visualClear"></div>
+					<div id="footer" role="contentinfo">
+						<div id="f-copyrightico">
+									<a href="http://www.openssl.org/source/license.html"><img src="" alt="the OpenSSL License" width="88" height="31"></a>
+							</div>
+					<div id="f-poweredbyico">
+									<a href="https://www.mediawiki.org/"><img src="EVP%20Symmetric%20Encryption%20and%20Decryption%20-%20OpenSSLWiki_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"></a>
+							</div>
+					<ul id="f-list">
+									<li id="lastmod"> This page was last modified on 30 November 2017, at 20:44.</li>
+									<li id="copyright">Content is available under <a href="https://wiki.openssl.org/index.php/License" title="License">the OpenSSL License</a> unless otherwise noted.</li>
+									<li id="privacy"><a href="https://wiki.openssl.org/index.php/OpenSSLWiki:Privacy_policy" title="OpenSSLWiki:Privacy policy">Privacy policy</a></li>
+									<li id="about"><a href="https://wiki.openssl.org/index.php/OpenSSLWiki:About" title="OpenSSLWiki:About">About OpenSSLWiki</a></li>
+									<li id="disclaimer"><a href="https://wiki.openssl.org/index.php/OpenSSLWiki:General_disclaimer" title="OpenSSLWiki:General disclaimer">Disclaimers</a></li>
+							</ul>
+		</div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.loader.state({"user":"ready","user.groups":"ready"});mw.loader.load(["mediawiki.toc","mediawiki.action.view.postEdit","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"]);});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":59});});</script>
+<div style="display: none; font-size: 11.4667px;" class="suggestions"><div class="suggestions-results"></div><div class="suggestions-special"></div></div></body></html>
