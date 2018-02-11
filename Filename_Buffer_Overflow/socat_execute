@@ -1,0 +1,1 @@
+socat -d -d TCP-LISTEN:7000,fork,crlf,nodelay EXEC:"stdbuf -i0 -oL -eL ./a.out",nofork
