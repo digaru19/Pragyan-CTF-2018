@@ -5,10 +5,6 @@
 
 // Messages :-
 char ciphertext_msg[] = "\n The encrypted message for the given plaintext is :- \n";
-char temp1[21];
-char iv[20];
-char temp2[17];
-char key[40];
 
 void handleErrors(void)
 {
@@ -36,9 +32,8 @@ void read_AES_IV(char *s) {
     // printf("IV is :- %s \n", s);
 }
 
-void clear_credentials() {
-    memset(key, 0, 40);
-    memset(iv, 0, 20);
+void clear_buf(char *s, int size) {
+    memset(s, 0, size);
 }
 
 int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *plaintext)
@@ -48,8 +43,8 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *plaint
   int len;
   int plaintext_len;
 
-  char key[40];
   char iv[20];
+  char key[40];
   read_AES_key(key);
   read_AES_IV(iv);
 
@@ -91,6 +86,11 @@ int encrypt(unsigned char *plaintext, int plaintext_len)
   int ciphertext_len;
   int decryptedtext_len;
   char ciphertext[128];
+  char key[40];
+  char iv[20];
+
+  clear_buf(key,40);
+  clear_buf(iv,20);
 
   read_AES_key(key);
   read_AES_IV(iv);
@@ -132,7 +132,9 @@ int encrypt(unsigned char *plaintext, int plaintext_len)
   decryptedtext[decryptedtext_len] = '\0';
   printf("\nDecrypted text is:\n");
   printf("%s\n\n", decryptedtext);
-  clear_credentials();
+  
+  clear_buf(key,40);
+  clear_buf(iv,20);
 
   return ciphertext_len;
 }
@@ -158,7 +160,6 @@ int main (void)
    * algorithm and mode
    */
   
-  clear_credentials();
   encrypt(plaintext, strlen(plaintext));
 
   return 0;
