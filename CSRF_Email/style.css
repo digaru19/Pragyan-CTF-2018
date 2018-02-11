@@ -1,0 +1,22 @@
+#header {
+    height: 20px;
+    width: 100%;
+}
+
+
+#left {
+    display: inline;
+    margin: 10px;
+    height: 300px;
+    width: 20%;
+    border: 1px solid grey;
+}
+
+#right {
+    display: inline;
+    margin: 10px;
+    height: 300px;
+    width: 70%;
+    border: 1px solid grey;
+}
+
