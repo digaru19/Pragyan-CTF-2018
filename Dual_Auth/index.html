@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Challenge</title>
+
+<style type="text/css">
+#header {
+    height: 20px;
+    width: 100%;
+}
+#login_form{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+    border: 1px solid grey;  
+    padding: 10px;
+    line-height: 25px;
+
+}
+
+#login_form input {
+    margin-top: 20px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="header"> 
+</div>
+
+<div id="login_form" >
+    <center>
+    <form action="http://localhost/ss/dual/login.php" method="POST">
+        <label>Email/Team Name: </label>
+        <input id='identifier' type="text" name="identifier" maxlength="200" placeholder="Enter Email/Team name">
+        <select name='id_type'>
+            <option value='email' >Email</option>
+            <option value='team_name'>Team Name</option>
+        </select>
+        <br>
+        <label>Password: </label>
+        <input id='passwd' type="password" name="password" maxlength="200" placeholder="Enter Password">
+        <br>
+        <input type="submit" value="Login">
+    </form>
+    </center>
+</div>
+
+
+</body>
+</html>
