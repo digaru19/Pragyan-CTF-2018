@@ -54,7 +54,7 @@ function verify_email_password($email, $password) {
 
     $result = post_data("http://localhost:8000/email_auth", $json_req);
     if($result === False) {
-        die("500 Internal server error. Please contact the CTF admins.");
+        die("500 Internal server error. Please contact the Pragyan CTF admins immediately.");
     }
 
     $resp = json_decode($result);

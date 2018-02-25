@@ -17,7 +17,7 @@ $id = $_SESSION['id'];
 <head>
     <title>Homepage</title>
 </head>
-<body>
+<body style='background-color: #d6eaf8'>
 
 <p style="float: right">
 <a href='/ss/dual/logout.php'> Logout </a>

@@ -2,7 +2,7 @@
 
 $sayings = array();
 
-array_push($sayings, "Hello", 
+array_push($sayings, 
     "To err is human... to really screw up requires the root password.",
     "Life would be so much easier if we only had the source code.", 
     "My software never has bugs. It just develops random features.", 
@@ -22,8 +22,8 @@ function get_random_saying() {
 }
 
 function output_flag() {
-    $flag = 'pctf{howyoudoingbuddy}';
-    return "Flag :- ".$flag;
+    $flag = 'The flag is :- pctf{4u1h3ntic4Ti0n.4nd~4u1horiz4ti0n_diff3r}';
+    return $flag;
 }
 
 ?>
