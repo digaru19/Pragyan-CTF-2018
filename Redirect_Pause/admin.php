@@ -2,25 +2,32 @@
 
 require "helpers.php";
 
-header('Location: /ss/R/unavailable.php');
+session_start();
+
+if(!check_login()) {
+    redirect("/ss/R/");
+}
+else {
+    header('Location: /ss/R/unavailable.php');
+}
 
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Admin Dashboard</title>
 </head>
 <body>
 
 <center>
 <h4>
-ADMIN Panel
-<br>
-Don't poke your nose around here.
+Redirect
+<br><br>
+The Admin panel is under construction. Redirecting ...
 </h4>
 <br><br>
-Flag :- __some_random_flag_text_here__
+Flag :- pctf{y0u=Sh0Uldn'1/h4v3*s33n,1his.:)}
 </center>
 
 </body>

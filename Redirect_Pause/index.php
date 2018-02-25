@@ -4,18 +4,25 @@
 require "helpers.php";
 session_start();
 
-if(isset($_POST['is_admin'])) {
-    if($_POST['is_admin'] === 'on') {
-        redirect("/ss/R/admin.php");
-    }
-}
 
 if(isset($_POST['email']) && isset($_POST['password'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
+
     if(verify_email_password($email, $password) === true) {
         $_SESSION['logged_in'] = true;
+        
+        if(isset($_POST['is_admin'])) {
+            if($_POST['is_admin'] === 'on') {
+                redirect("/ss/R/admin.php");
+            }
+        }
+
         redirect("/ss/R/dashboard.php");
+    }
+    else {
+        echo "Invalid user credentials !!";
+        die();
     }
 }
 
@@ -38,7 +45,7 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
     border: 1px solid grey;  
     padding: 10px;
     line-height: 25px;
-
+    background-color: #fdebd0 ;
 }
 
 #login_form input {
@@ -47,8 +54,7 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
 
 </style>
 </head>
-<body>
-
+<body style='background-color:  #fadbd8 ' >
 <div id="header"> 
 </div>
 
@@ -61,7 +67,7 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
         <label>Password: </label>
         <input id='passwd' type="password" name="password" maxlength="200" placeholder="Enter Password">
         <br>
-        <input id='admin_button' type="checkbox" name="is_admin"> <label for='admin_button'> I'm Admin. </label>
+        <input id='admin_button' type="checkbox" name="is_admin" value="on"> <label for='admin_button'> I'm Admin. </label>
         <br>
         <input type="submit" value="Login">
     </form>
