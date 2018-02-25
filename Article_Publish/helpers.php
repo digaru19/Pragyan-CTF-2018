@@ -8,7 +8,8 @@ function article_not_found($name) {
 }
 
 function sanitize($filename) {
-    $evil_chars = array("php:", "secret/flag_7258689d608c0e2e6a90c33c44409f9d.txt");
+
+    $evil_chars = array("php:", "secret/flag_7258689d608c0e2e6a90c33c44409f9d");
     foreach ($evil_chars as $value) {
         if( strpos($filename, $value) !== false) {
             echo "You naughty cheat !!<br>";
@@ -16,6 +17,7 @@ function sanitize($filename) {
         }
     }
 
+    // Sanitize input file name
     $bad_chars = array("./", "../");
     foreach ($bad_chars as $value) {
         $filename = str_replace($value, "", $filename);
