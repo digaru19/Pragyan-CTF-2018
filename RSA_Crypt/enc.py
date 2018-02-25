@@ -80,13 +80,5 @@ def execute():
     print("Encrypted message :- ")
     print( codecs.encode(c1.to_bytes(KEY_LENGTH // 8, byteorder='little'), 'hex').decode() )
 
-    c2 = pow(2, e, n)
-    c3 = (c1 * c2) % n
-    dec = pow(c3, d, n)
-    dec = dec // 2
-
-    decrypted = dec.to_bytes(KEY_LENGTH // 8, byteorder='little').decode()
-    print("Decrypted message :- " + decrypted)
-
 if __name__ == '__main__':
     execute()

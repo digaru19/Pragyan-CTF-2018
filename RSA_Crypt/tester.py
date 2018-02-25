@@ -62,31 +62,46 @@ def execute():
     phi = (p-1) * (q-1)
     d = modinv(e, phi)
 
-    # print("N is :- " + str(n))
-    # print("P is :- " + str(p))
-    # print("Q is :- " + str(q))
-    # print("D is :- " + str(d))
-    # print("Magic is :- " + str((d*e)%phi))
+    msg_text = input("Enter encrypted message :- ")
 
-    msg_text = input("Enter message :- ")
-
-    if(len(msg_text)) > KEY_LENGTH / 8:
+    if(len(msg_text)) > KEY_LENGTH / 4:
         print("Message too big")
         exit()
 
-    msg = int.from_bytes(msg_text.encode(), byteorder='little')
+    try:
+        t = codecs.decode(msg_text.encode(), 'hex')
+    except:
+        print("Given encrypted text is not a valid hex input")
+        exit()
 
-    c1 = pow(msg,e,n)
-    print("Encrypted message :- ")
-    print( codecs.encode(c1.to_bytes(KEY_LENGTH // 8, byteorder='little'), 'hex').decode() )
+    msg = int.from_bytes(t, byteorder='little')
 
     c2 = pow(2, e, n)
-    c3 = (c1 * c2) % n
-    dec = pow(c3, d, n)
-    dec = dec // 2
+    c3 = (c2 * msg) % n
 
-    decrypted = dec.to_bytes(KEY_LENGTH // 8, byteorder='little').decode()
-    print("Decrypted message :- " + decrypted)
+    d_enc = c3.to_bytes(KEY_LENGTH // 8, byteorder='little')
+    print(codecs.encode(d_enc, 'hex').decode())
+
+    print("\nEnter decrypted message (2t) :- ")
+    msg_text = input()
+
+    if(len(msg_text)) > KEY_LENGTH / 4:
+        print("Message too big")
+        exit()
+
+    try:
+        t = codecs.decode(msg_text.encode(), 'hex')
+    except:
+        print("Given encrypted text is not a valid hex input")
+        exit()
+
+    msg = int.from_bytes(t, byteorder='little')
+    dec = msg // 2
+
+    dec_msg = dec.to_bytes(KEY_LENGTH // 8, byteorder='little').decode()
+
+    print("\n\nDecrypted message :- ")
+    print(dec_msg)
 
 if __name__ == '__main__':
     execute()

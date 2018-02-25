@@ -1,9 +1,6 @@
 
-import sys
 import codecs
-import random
-import time
-from string import ascii_letters
+from hashlib import sha1
 
 KEY_LENGTH = 1024
 
@@ -62,31 +59,45 @@ def execute():
     phi = (p-1) * (q-1)
     d = modinv(e, phi)
 
-    # print("N is :- " + str(n))
-    # print("P is :- " + str(p))
-    # print("Q is :- " + str(q))
-    # print("D is :- " + str(d))
-    # print("Magic is :- " + str((d*e)%phi))
+    flag_hash = "26cf180b11882c78b996dfa5dd77de1694ffba96";
+    flag_enc_hash = "1ede179f90f0602de1eb96fd7e32f2f0fb3526ae";
 
-    msg_text = input("Enter message :- ")
-
-    if(len(msg_text)) > KEY_LENGTH / 8:
-        print("Message too big")
+    try:
+        enc_text = input("Enter encrypted message (in HEX) :- ")
+    except KeyboardInterrupt:
         exit()
 
-    msg = int.from_bytes(msg_text.encode(), byteorder='little')
+    if(len(enc_text)) > KEY_LENGTH / 4:
+        print("Encrypted message too big")
+        exit()
 
-    c1 = pow(msg,e,n)
-    print("Encrypted message :- ")
-    print( codecs.encode(c1.to_bytes(KEY_LENGTH // 8, byteorder='little'), 'hex').decode() )
+    if sha1(enc_text.encode()).hexdigest() == flag_enc_hash:
+        print("\nClever move\n")
+        exit()
 
-    c2 = pow(2, e, n)
-    c3 = (c1 * c2) % n
-    dec = pow(c3, d, n)
-    dec = dec // 2
+    try:
+        t = codecs.decode(enc_text.encode(), 'hex')
+    except:
+        print("Given encrypted text is not a valid hex input")
+        exit()
 
-    decrypted = dec.to_bytes(KEY_LENGTH // 8, byteorder='little').decode()
-    print("Decrypted message :- " + decrypted)
+    msg = int.from_bytes(t, byteorder='little')
+    dec = pow(msg, d, n)
+
+    print("\nDecrypted message :- ")
+
+    print("In HEX :- ")
+    print(codecs.encode(dec.to_bytes(KEY_LENGTH // 8, byteorder='little'), 'hex').decode())
+    print() 
+
+    print("In ASCII :- ")
+    try:
+        decrypted = dec.to_bytes(KEY_LENGTH // 8, byteorder='little')
+        print(decrypted.decode())
+    except:
+        print("The decrypted message is not a valid ASCII text.")
+
+    print()     
 
 if __name__ == '__main__':
     execute()
